@@ -3,10 +3,12 @@ services:
     volumes:
       - ollama:/root/.ollama
     container_name: ollama
-    pull_policy: always
+    # pull_policy: always
     tty: true
     restart: unless-stopped
     image: ollama/ollama:${OLLAMA_DOCKER_TAG-latest}
+    ports:
+      - 11434:11434
 
   open-webui:
     build:
@@ -25,8 +27,10 @@ services:
     environment:
       - 'OLLAMA_BASE_URL=http://ollama:11434'
       - 'WEBUI_SECRET_KEY='
+      - 'WEBUI_AUTH=False'
     extra_hosts:
       - host.docker.internal:host-gateway
+      - lm-studio:192.168.1.102
     restart: unless-stopped
 
 volumes:
